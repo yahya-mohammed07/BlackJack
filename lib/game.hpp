@@ -38,8 +38,8 @@ public:
     max_ranks
   };
 private:
-  Rank m_rank{};
   Suit m_suit{};
+  Rank m_rank{};
 
 public:
   Card() {}
@@ -81,14 +81,20 @@ public:
     }
     return res;
   }
+
+  auto get_rank() const { return m_rank; }
 };
 
 using Deck = std::array<Card, 52>;
 
-class Game {
+class Game : public Card {
 private:
   Card m_card{};
   Deck m_deck{};
+  static inline int once{};
+
+public:
+  Game() { }
 
 public:
 
@@ -109,8 +115,22 @@ public:
     std::cout << '\n';
   }
 
+  auto getCard() const -> Card { return m_card; }
+
   auto shuffleDeck() -> void {
     std::shuffle(m_deck.begin(), m_deck.end(), Random::mt);
+  }
+
+  auto getCardValue(const Card& card) const {
+    switch (card.get_rank())
+    {
+    case Rank::rank_ace:
+      return 11;
+    case Rank::rank_jack: case Rank::rank_queen: case Rank::rank_king: case Rank::rank_10:
+      return 10;
+    default:
+      return static_cast<int>(card.get_rank()) + 2;
+    }
   }
 };
 
