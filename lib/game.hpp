@@ -101,7 +101,8 @@ public:
     int index{ 0 };
     for (int suit{ 0 }; suit < static_cast<int>(Card::Suit::max_suits); ++suit) {
       for (int rank{ 0 }; rank < static_cast<int>(Card::Rank::max_ranks); ++rank) {
-        m_deck[index] = Card(static_cast<Card::Rank>(rank), static_cast<Card::Suit>(suit));
+        m_deck[index] = Card(static_cast<Card::Rank>(rank),
+          static_cast<Card::Suit>(suit));
         ++index;
       }
     }
@@ -125,7 +126,8 @@ public:
     {
     case Rank::rank_ace:
       return 11;
-    case Rank::rank_jack: case Rank::rank_queen: case Rank::rank_king: case Rank::rank_10:
+    case Rank::rank_jack: case Rank::rank_queen:
+    case Rank::rank_king: case Rank::rank_10:
       return 10;
     default:
       // since enum starts from 0, we add 2 to get the actual value of the card

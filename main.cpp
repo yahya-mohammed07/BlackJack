@@ -9,7 +9,8 @@ auto main() -> int {
   playerALi.shuffleDeck();
   playerALi.printDeck();
 
-  std::cout << playerALi.getCardValue(Card{Card::Rank::rank_4, Card::Suit::diamond}) << '\n';
+  std::cout << playerALi.getCardValue(Card{ Card::Rank::rank_4,
+                                                Card::Suit::diamond }) << '\n';
 
   Game playerYahya{};
   playerYahya.createDeck();
