@@ -91,7 +91,6 @@ class Game : public Card {
 private:
   Card m_card{};
   Deck m_deck{};
-  static inline int once{};
 
 public:
   Game() { }
@@ -129,9 +128,12 @@ public:
     case Rank::rank_jack: case Rank::rank_queen: case Rank::rank_king: case Rank::rank_10:
       return 10;
     default:
+      // since enum starts from 0, we add 2 to get the actual value of the card
       return static_cast<int>(card.get_rank()) + 2;
     }
   }
+
+
 };
 
 
