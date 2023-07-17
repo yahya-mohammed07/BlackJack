@@ -102,8 +102,12 @@ public:
   auto play() {
     Index cardIndex{ 0 };
     const Dealer dealer{ getCardValue(m_deck[cardIndex++]) };
+    std::cout << "The dealer is showing: " << dealer.getScore() << '\n';
     const Player player{ getCardValue(m_deck[cardIndex]) +
                       getCardValue(m_deck[cardIndex + 1]) };
+    std::cout << "You have: " << player.getScore() << '\n';
+
+    cardIndex += 2; // skip the first two cards
 
     if (playerTurn(m_deck, player, cardIndex)) {
       return false; // player lost
