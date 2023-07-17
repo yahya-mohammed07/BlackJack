@@ -1,99 +1,26 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
-#include <array>
-#include <algorithm>
-#include <string>
+#include "player.hpp"
+#include "dealer.hpp"
+#include "card.hpp"
 #include "rand.hpp"
-
-class Card {
-public:
-  enum class Suit
-  {
-    club,
-    diamond,
-    heart,
-    spade,
-
-    max_suits
-  };
-
-  enum class Rank
-  {
-    rank_2,
-    rank_3,
-    rank_4,
-    rank_5,
-    rank_6,
-    rank_7,
-    rank_8,
-    rank_9,
-    rank_10,
-    rank_jack,
-    rank_queen,
-    rank_king,
-    rank_ace,
-
-    max_ranks
-  };
-private:
-  Suit m_suit{};
-  Rank m_rank{};
-
-public:
-  Card() {}
-  Card(Rank rank, Suit suit) : m_rank{ rank }, m_suit{ suit } {}
-
-public:
-  auto printCard(const Card& cards) const -> std::string {
-    std::string res{};
-    switch (cards.m_rank)
-    {
-    case Rank::rank_2: res += "2"; break;
-    case Rank::rank_3: res += "3"; break;
-    case Rank::rank_4: res += "4";   break;
-    case Rank::rank_5: res += "5";  break;
-    case Rank::rank_6: res += "6";  break;
-    case Rank::rank_7: res += "7";  break;
-    case Rank::rank_8: res += "8";  break;
-    case Rank::rank_9: res += "9";  break;
-    case Rank::rank_10: res += "10";  break;
-    case Rank::rank_jack: res += "J"; break;
-    case Rank::rank_queen: res += "Q";  break;
-    case Rank::rank_king: res += "K"; break;
-    case Rank::rank_ace: res += "A";  break;
-
-    default:
-      break;
-    }
-
-    switch (cards.m_suit)
-    {
-    case Suit::club: res += "C"; break;
-    case Suit::diamond: res += "D"; break;
-    case Suit::heart: res += "H"; break;
-    case Suit::spade: res += "S"; break;
-
-    default:
-      break;
-
-    }
-    return res;
-  }
-
-  auto get_rank() const { return m_rank; }
-};
+#include <array>
 
 using Deck = std::array<Card, 52>;
+using Index = Deck::size_type;
 
-class Game : public Card {
+class Game : public Player, public Dealer {
 private:
   Card m_card{};
   Deck m_deck{};
+  int m_score{ 0 };
+  const int max_player_limit{ 21 };
+  const int min_point_dealer{ 17 };
 
 public:
-  Game() { }
+  Game() {}
+  Game(const int score) : m_score{ score } {}
 
 public:
 
@@ -115,19 +42,18 @@ public:
     std::cout << '\n';
   }
 
-  auto getCard() const -> Card { return m_card; }
+  auto getCard() const -> Card { return m_deck[Random::get_random(0, 52)]; }
 
   auto shuffleDeck() -> void {
     std::shuffle(m_deck.begin(), m_deck.end(), Random::mt);
   }
 
   auto getCardValue(const Card& card) const {
-    switch (card.get_rank())
-    {
-    case Rank::rank_ace:
+    switch (card.get_rank()) {
+    case Card::Rank::rank_ace:
       return 11;
-    case Rank::rank_jack: case Rank::rank_queen:
-    case Rank::rank_king: case Rank::rank_10:
+    case Card::Rank::rank_jack: case Card::Rank::rank_queen:
+    case Card::Rank::rank_king: case Card::Rank::rank_10:
       return 10;
     default:
       // since enum starts from 0, we add 2 to get the actual value of the card
@@ -135,10 +61,58 @@ public:
     }
   }
 
+  auto getShuffledDeck() const -> Deck { return m_deck; }
 
+  auto playerTurn(const Deck& shuffleDeck, const Player& player,
+    Index cardIndex) -> bool {
+    int playerScore{ player.getScore() };
+    while (true) {
+      if (playerScore > player.getMaxScore()) {
+        std::cout << "You lost!\n";
+        return true;
+      }
+      else {
+        if (player.makeChoice() == 's') {
+          playerScore += getCardValue(shuffleDeck[cardIndex++]);
+          std::cout << "Your score is: " << playerScore << '\n';
+        }
+        else {
+          return false;
+        }
+      }
+    }
+  }
+
+  auto dealerTurn(const Deck& shuffleDeck, const Dealer& dealer,
+    Index cardIndex) -> bool {
+    int dealerScore{ dealer.getScore() };
+    while (true) {
+      if (dealerScore > dealer.getMinScore()) {
+        std::cout << "Dealer lost!\n";
+        return true;
+      }
+      else {
+        dealerScore += getCardValue(shuffleDeck[cardIndex++]);
+        std::cout << "Dealer score is: " << dealerScore << '\n';
+      }
+    }
+  }
+
+  auto play() {
+    Index cardIndex{ 0 };
+    const Dealer dealer{ getCardValue(m_deck[cardIndex++]) };
+    const Player player{ getCardValue(m_deck[cardIndex]) +
+                      getCardValue(m_deck[cardIndex + 1]) };
+
+    if (playerTurn(m_deck, player, cardIndex)) {
+      return false; // player lost
+    }
+    if (dealerTurn(m_deck, dealer, cardIndex)) {
+      return true; // dealer lost
+    }
+
+    return player.getScore() > dealer.getScore();
+  }
 };
 
-
-
-
-#endif
+#endif // !GAME_HPP
