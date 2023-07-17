@@ -5,6 +5,7 @@
 #include "dealer.hpp"
 #include "card.hpp"
 #include "rand.hpp"
+#include <algorithm>
 #include <array>
 
 using Deck = std::array<Card, 52>;

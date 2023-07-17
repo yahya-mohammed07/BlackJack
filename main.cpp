@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include "lib/game.hpp"
 
 auto main() -> int {
   Game game{};
