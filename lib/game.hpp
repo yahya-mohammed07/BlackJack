@@ -67,7 +67,6 @@ public:
     int playerScore{ player.getScore() };
     while (true) {
       if (playerScore > max_score) { // player lost
-        std::cout << "You lost!\n";
         return true;
       }
       else {
@@ -91,13 +90,12 @@ public:
     }
 
     if (dealerScore > max_score) { // dealer lost
-      std::cout << "Dealer lost!\n";
       return true; // dealer lost
     }
     return false; // dealer didn't lose
   }
 
-  auto play() {
+  auto play() -> bool {
     Index cardIndex{ 0 }; // index of the next card to be dealt
     const Dealer dealer{ getCardValue(m_deck[cardIndex++]) }; // first card
     std::cout << "The dealer is showing: " << dealer.getScore() << '\n';
@@ -114,7 +112,6 @@ public:
       return true; // dealer lost
     }
     if (player.getScore() == dealer.getScore()) {
-      std::cout << "It's a tie!\n";
       return false;
     }
 
