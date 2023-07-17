@@ -15,6 +15,8 @@ class Game : public Player, public Dealer {
 private:
   Card m_card{};
   Deck m_deck{};
+  const int max_score{ 21 };
+  const int min_score{ 17 };
 
 public:
   Game() {}
@@ -64,7 +66,7 @@ public:
     Index cardIndex) -> bool {
     int playerScore{ player.getScore() };
     while (true) {
-      if (playerScore > player.getMaxScore()) {
+      if (playerScore > max_score) { // player lost
         std::cout << "You lost!\n";
         return true;
       }
@@ -83,12 +85,12 @@ public:
   auto dealerTurn(const Deck& shuffleDeck, const Dealer& dealer,
     Index cardIndex) -> bool {
     int dealerScore{ dealer.getScore() };
-    while (true) { // dealer must hit if score is less than 17
+    while (dealerScore < min_score) { // dealer must hit if score is less than 17
       dealerScore += getCardValue(shuffleDeck[cardIndex++]);
       std::cout << "Dealer score is: " << dealerScore << '\n';
     }
 
-    if (dealerScore > dealer.getMinScore()) {
+    if (dealerScore > max_score) { // dealer lost
       std::cout << "Dealer lost!\n";
       return true; // dealer lost
     }

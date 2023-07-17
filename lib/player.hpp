@@ -6,7 +6,6 @@
 class Player {
 private:
   int m_score{ 0 };
-  const int max_player_limit{ 21 };
 
 public:
   Player() {}
@@ -14,7 +13,6 @@ public:
 
 public:
   auto getScore() const -> int { return m_score; }
-  auto getMaxScore() const -> int { return max_player_limit; }
   auto makeChoice() const -> char {
     while (true) { // loop until valid input
       char temp{};
