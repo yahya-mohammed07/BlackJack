@@ -7,5 +7,4 @@ auto main() -> int {
   game.printDeck();
 
   game.play();
-  return 0;
 }

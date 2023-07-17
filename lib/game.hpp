@@ -15,13 +15,9 @@ class Game : public Player, public Dealer {
 private:
   Card m_card{};
   Deck m_deck{};
-  int m_score{ 0 };
-  const int max_player_limit{ 21 };
-  const int min_point_dealer{ 17 };
 
 public:
   Game() {}
-  Game(const int score) : m_score{ score } {}
 
 public:
 
