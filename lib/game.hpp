@@ -69,11 +69,11 @@ public:
         return true;
       }
       else {
-        if (player.makeChoice() == 's') {
+        if (player.makeChoice() == 'h') { // hit
           playerScore += getCardValue(shuffleDeck[cardIndex++]);
           std::cout << "Your score is: " << playerScore << '\n';
         }
-        else {
+        else { // stand
           return false;
         }
       }
@@ -96,11 +96,11 @@ public:
   }
 
   auto play() {
-    Index cardIndex{ 0 };
-    const Dealer dealer{ getCardValue(m_deck[cardIndex++]) };
+    Index cardIndex{ 0 }; // index of the next card to be dealt
+    const Dealer dealer{ getCardValue(m_deck[cardIndex++]) }; // first card
     std::cout << "The dealer is showing: " << dealer.getScore() << '\n';
     const Player player{ getCardValue(m_deck[cardIndex]) +
-                      getCardValue(m_deck[cardIndex + 1]) };
+                      getCardValue(m_deck[cardIndex + 1]) }; // first two cards
     std::cout << "You have: " << player.getScore() << '\n';
 
     cardIndex += 2; // skip the first two cards
@@ -111,9 +111,13 @@ public:
     if (dealerTurn(m_deck, dealer, cardIndex)) {
       return true; // dealer lost
     }
+    if (player.getScore() == dealer.getScore()) {
+      std::cout << "It's a tie!\n";
+      return false;
+    }
 
     return player.getScore() > dealer.getScore();
   }
 };
 
-#endif // !GAME_HPP
+#endif // GAME_HPP

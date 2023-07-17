@@ -16,10 +16,12 @@ public:
   auto getScore() const -> int { return m_score; }
   auto getMaxScore() const -> int { return max_player_limit; }
   auto makeChoice() const -> char {
-    char temp{};
-    std::cout << "Do you want to hit or stand? (h/s): ";
-    std::cin >> temp;
-    return temp;
+    while (true) { // loop until valid input
+      char temp{};
+      std::cout << "Do you want to hit or stand? (h/s): ";
+      std::cin >> temp;
+      return temp;
+    }
   }
 };
 
