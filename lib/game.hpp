@@ -74,7 +74,7 @@ public:
           std::cout << "Your score is: " << playerScore << '\n';
         }
         else { // stand
-          return false;
+          return false; // player didn't lose
         }
       }
     }
@@ -83,16 +83,16 @@ public:
   auto dealerTurn(const Deck& shuffleDeck, const Dealer& dealer,
     Index cardIndex) -> bool {
     int dealerScore{ dealer.getScore() };
-    while (true) {
-      if (dealerScore > dealer.getMinScore()) {
-        std::cout << "Dealer lost!\n";
-        return true;
-      }
-      else {
-        dealerScore += getCardValue(shuffleDeck[cardIndex++]);
-        std::cout << "Dealer score is: " << dealerScore << '\n';
-      }
+    while (true) { // dealer must hit if score is less than 17
+      dealerScore += getCardValue(shuffleDeck[cardIndex++]);
+      std::cout << "Dealer score is: " << dealerScore << '\n';
     }
+
+    if (dealerScore > dealer.getMinScore()) {
+      std::cout << "Dealer lost!\n";
+      return true; // dealer lost
+    }
+    return false; // dealer didn't lose
   }
 
   auto play() {
